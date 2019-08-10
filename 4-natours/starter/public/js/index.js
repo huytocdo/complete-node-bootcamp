@@ -35,7 +35,6 @@ if (userDataForm) {
     form.append('name', document.getElementById('name').value);
     form.append('email', document.getElementById('email').value);
     form.append('photo', document.getElementById('photo').files[0]);
-    console.log(form);
     updateSettings(form, 'data');
   });
 }
@@ -43,7 +42,6 @@ if (userDataForm) {
 if (userPasswordForm) {
   userPasswordForm.addEventListener('submit', async e => {
     e.preventDefault();
-    console.log('UPDATE PASSW');
     document.querySelector('.btn--save-password').textContent = 'Updating....';
     const passwordCurrent = document.getElementById('password-current').value;
     const password = document.getElementById('password').value;

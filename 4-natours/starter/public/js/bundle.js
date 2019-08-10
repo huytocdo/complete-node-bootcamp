@@ -8376,19 +8376,18 @@ function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            console.log(email, password);
-            _context.prev = 1;
-            _context.next = 4;
+            _context.prev = 0;
+            _context.next = 3;
             return (0, _axios.default)({
               method: 'POST',
-              url: 'http://127.0.0.1:8000/api/v1/users/login',
+              url: '/api/v1/users/login',
               data: {
                 email: email,
                 password: password
               }
             });
 
-          case 4:
+          case 3:
             res = _context.sent;
 
             if (res.data.status === 'success') {
@@ -8398,20 +8397,20 @@ function () {
               }, 1500);
             }
 
-            _context.next = 11;
+            _context.next = 10;
             break;
 
-          case 8:
-            _context.prev = 8;
-            _context.t0 = _context["catch"](1);
+          case 7:
+            _context.prev = 7;
+            _context.t0 = _context["catch"](0);
             (0, _alert.showAlert)('error', _context.t0.response.data.message);
 
-          case 11:
+          case 10:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[1, 8]]);
+    }, _callee, null, [[0, 7]]);
   }));
 
   return function login(_x, _x2) {
@@ -8436,7 +8435,7 @@ function () {
             _context2.next = 3;
             return (0, _axios.default)({
               method: 'GET',
-              url: 'http://127.0.0.1:8000/api/v1/users/logout'
+              url: '/api/v1/users/logout'
             });
 
           case 3:
@@ -8494,37 +8493,36 @@ function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            console.log(type === 'password');
-            _context.prev = 1;
-            url = type === 'password' ? 'http://127.0.0.1:8000/api/v1/users/update-my-password' : 'http://127.0.0.1:8000/api/v1/users/update-me';
-            _context.next = 5;
+            _context.prev = 0;
+            url = type === 'password' ? '/api/v1/users/update-my-password' : '/api/v1/users/update-me';
+            _context.next = 4;
             return (0, _axios.default)({
               method: 'PATCH',
               url: url,
               data: data
             });
 
-          case 5:
+          case 4:
             res = _context.sent;
 
             if (res.data.status === 'success') {
               (0, _alert.showAlert)('success', "".concat(type.toUpperCase(), " updated successfully!"));
             }
 
-            _context.next = 12;
+            _context.next = 11;
             break;
 
-          case 9:
-            _context.prev = 9;
-            _context.t0 = _context["catch"](1);
+          case 8:
+            _context.prev = 8;
+            _context.t0 = _context["catch"](0);
             (0, _alert.showAlert)('error', _context.t0.response.data.message);
 
-          case 12:
+          case 11:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[1, 9]]);
+    }, _callee, null, [[0, 8]]);
   }));
 
   return function updateSettings(_x, _x2) {
@@ -8559,21 +8557,20 @@ function () {
   var _ref = _asyncToGenerator(
   /*#__PURE__*/
   regeneratorRuntime.mark(function _callee(tourId) {
-    var _session;
-
+    var session;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             _context.prev = 0;
             _context.next = 3;
-            return (0, _axios.default)("http://127.0.0.1:8000/api/v1/bookings/checkout-session/".concat(tourId));
+            return (0, _axios.default)("/api/v1/bookings/checkout-session/".concat(tourId));
 
           case 3:
-            _session = _context.sent;
+            session = _context.sent;
             _context.next = 6;
             return stripe.redirectToCheckout({
-              sessionId: _session.data.session.id
+              sessionId: session.data.session.id
             });
 
           case 6:
@@ -8587,9 +8584,6 @@ function () {
             (0, _alert.showAlert)('error', _context.t0);
 
           case 12:
-            console.log(session); // 3)
-
-          case 13:
           case "end":
             return _context.stop();
         }
@@ -8903,7 +8897,6 @@ if (userDataForm) {
     form.append('name', document.getElementById('name').value);
     form.append('email', document.getElementById('email').value);
     form.append('photo', document.getElementById('photo').files[0]);
-    console.log(form);
     (0, _updateSetting.updateSettings)(form, 'data');
   });
 }
@@ -8921,25 +8914,24 @@ if (userPasswordForm) {
           switch (_context.prev = _context.next) {
             case 0:
               e.preventDefault();
-              console.log('UPDATE PASSW');
               document.querySelector('.btn--save-password').textContent = 'Updating....';
               passwordCurrent = document.getElementById('password-current').value;
               password = document.getElementById('password').value;
               passwordConfirm = document.getElementById('password-confirm').value;
-              _context.next = 8;
+              _context.next = 7;
               return (0, _updateSetting.updateSettings)({
                 passwordCurrent: passwordCurrent,
                 password: password,
                 passwordConfirm: passwordConfirm
               }, 'password');
 
-            case 8:
+            case 7:
               document.querySelector('.btn--save-password').textContent = 'Save password';
               document.getElementById('password-current').value = '';
               document.getElementById('password').value = '';
               document.getElementById('password-confirm').value = '';
 
-            case 12:
+            case 11:
             case "end":
               return _context.stop();
           }
@@ -8988,7 +8980,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57629" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57594" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
