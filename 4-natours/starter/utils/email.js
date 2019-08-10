@@ -1,33 +1,62 @@
 const nodemailer = require('nodemailer');
+const pug = require('pug');
+const htmlToText = require('html-to-text');
+// Usage
+// new Email(user, url).sendWelcome();
+module.exports = class Email {
+  constructor(user, url) {
+    this.to = user.email;
+    this.firstName = user.name.split(' ')[0];
+    this.url = url;
+    this.from = `Huy Nguyen <${process.env.EMAIL_FROM}>`;
+  }
 
-const sendEmail = async options => {
-  // 1) Create a transporter
-  const transporter = nodemailer.createTransport({
-    // Active in gmail "less secure app" option
-    // service: 'Gmail',
-    // auth: {
-    //   user: process.env.GMAIL_USERNAME,
-    //   pass: process.env.GMAIL_PASSWORD
-    // }
-    // Custom mail service (mailtrap.io)
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    auth: {
-      user: process.env.EMAIL_USERNAME,
-      pass: process.env.EMAIL_PASSWORD
+  newTransport() {
+    if (process.env.NODE_ENV === 'production') {
+      // SEND GRID
+      return nodemailer.createTransport({
+        service: 'SendGrid',
+        auth: {
+          user: process.env.SENDGRID_USERNAME,
+          pass: process.env.SENDGRID_PASSWORD
+        }
+      });
     }
-  });
-  // 2) Define the email options
-  const mailOptions = {
-    from: 'Huy Nguyen <admin@jonas.io>',
-    to: options.email,
-    subject: options.subject,
-    text: options.message
-    // html:
-  };
+    return nodemailer.createTransport({
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
+      auth: {
+        user: process.env.EMAIL_USERNAME,
+        pass: process.env.EMAIL_PASSWORD
+      }
+    });
+  }
 
-  // 3) Send the email with node mailer
-  await transporter.sendMail(mailOptions);
+  async send(template, subject) {
+    const html = pug.renderFile(`${__dirname}/../views/email/${template}.pug`, {
+      firstName: this.firstName,
+      url: this.url,
+      subject
+    });
+    // Send the actual email
+    const mailOptions = {
+      from: this.from,
+      to: this.to,
+      subject,
+      html,
+      text: htmlToText.fromString(html)
+    };
+    await this.newTransport().sendMail(mailOptions);
+  }
+
+  async sendWelcome() {
+    await this.send('welcome', 'Welcome to the Natours Family!');
+  }
+
+  async sendPasswordReset() {
+    await this.send(
+      'passwordReset',
+      'Your password reset token (valid for only 10 minutes)'
+    );
+  }
 };
-
-module.exports = sendEmail;
